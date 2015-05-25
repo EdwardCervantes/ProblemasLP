@@ -1,0 +1,282 @@
+PREGUNTA 1
+
+$a = 0;
+sub foo 
+{
+  return $a;
+}
+
+sub staticScope 
+{
+  my $a = 1;
+  return foo();
+} 
+
+print staticScope(); # 0 (from the saved global frame)
+
+$b = 0;
+sub bar
+{
+  return $b;
+}
+
+sub dynamicScope 
+{
+  local $b = 1;
+  return bar();
+}
+
+print dynamicScope(); # 1 (from the caller's frame)
+-----------------------------------------------------------------------------
+PREGUNTA 2
+
+En LISP las variables de ambito dinamico son llamadas variables especiales, se puede definir una variable especial con  defvar
+
+En este ejemplo la funcion check-regular referencia a la variable regular
+
+
+> (set 'regular 5)    
+5 
+> (defun check-regular () regular)
+CHECK-REGULAR 
+> (check-regular)
+5 
+> (let ((regular 6)) (check-regular))
+5
+
+En este ejemplo la funcon check-especial referencia a una variable especial.
+
+
+> (defvar *special* 5)
+*SPECIAL*
+> (defun check-special () *special*)
+CHECK-SPECIAL
+> (check-special)
+5
+> (let ((*special* 6)) (check-special))
+6
+-----------------------------------------------------------------------------
+PREGUNTA 3
+
+var name = "Michael"; 
+  
+function showCelebrityName () 
+{ 
+  console.log (name); 
+} 
+ 
+function showOrdinaryPersonName ()
+{  
+name = "Johnny"; 
+console.log (name); 
+} 
+showCelebrityName (); // Michael
+ 
+showOrdinaryPersonName (); // Johnny 
+
+showCelebrityName (); // Johnny
+
+function showOrdinaryPersonName () 
+{  
+  var name = "Johnny"; 
+  console.log (name); 
+} 
+-------------------------------------------------------------------------------
+PREGUNTA 4
+
+def f(): 
+    s = "MSJ1"
+    print s 
+
+s = "MSJ2" 
+f()
+print s
+
+IMPRIME MSJ1
+IMPRIME MSJ2
+
+def f(): 
+	print s
+	s = "MSJ1"
+	print s
+
+
+s = "MSJ2" 
+f()
+print s
+
+IMPRIME ERROR EN LA PRIMERA IMPRESION DE LA VARIABLE s
+
+def f():
+    global s
+    print s
+    s = "MSJ1"
+    print s 
+
+
+s = "MSJ2" 
+f()
+print s
+
+IMPRIME MSJ2
+IMPRIME MSJ1
+IMPRIME MSJ1
+--------------------------------------------------------------------------------
+PREGUNTA 5
+
+Programa ejecutado en Java:
+class Programa
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		x=21;
+		int x;
+		x=42;
+	}
+}
+
+ERROR DE COMPILACION
+cannot find symbol x=21; symbol: variable x
+
+Programa ejecutado en C++
+int main()
+{
+	x=21;
+	int x;
+	x=42;
+	return 0;
+}
+
+ERROR DE COMPILACION
+In function 'int main()':
+error: 'x' was not declared in this scope x=21;
+
+Programa ejecutado en C
+int main(void)
+{
+	x=21;
+	int x;
+	x=42;
+	return 0;
+}
+ERROR DE COMPILACION
+In function 'int main()':
+error: 'x' undeclared (first use in this function) x=21;
+
+
+---------------------------------------------------------------------------------
+PREGUNTA 6
+Programa ejecutado en C#
+public static void Main()
+{
+	for(int i=0;i<10;i++)
+	{	
+		int n=0;
+	}
+	n=n+2;
+}
+ERROR DE COMPILACION
+The name `n' does not exist in the current context
+
+Programa ejecutado en C
+int main(void)
+{
+	for(int i=0;i<10;i++)
+	{
+		int n=0;
+	}
+	n=n+2;
+}
+ERROR DE COMPILACION
+'n' undeclared (first use in this function)
+each undeclared identifier is reported only once for each function it appears in
+
+Programa ejecutado en Java
+public static void main (String[] args) throws java.lang.Exception
+{
+	for(int i=0;i<10;i++)
+	{
+		int n=0;
+	}
+	n=n+2;
+}
+ERROR DE COMPILACION
+cannot find symbol n=n+2; variable n
+------------------------------------------------------------------------------------
+PREGUNTA 7
+
+Programa ejecutado en C++
+void Pila();
+void Heap();
+static int array[100000] = {0};
+int main()
+{	
+	for(int i=0;i<100000;i++)
+	{
+		array[i]=1;
+	}
+	Pila();
+	Heap();
+	return 0;
+}
+
+void Pila()
+
+{
+
+	int array[100000] = {0};
+
+	for(int i=0;i<100000;i++)
+
+		array[i]=1;
+
+}
+void Heap()
+
+{
+
+	int * array=new int[100000];
+	for(int i=0;i<100000;i++)
+
+		array[i]=1;
+
+}
+
+Sin error en la compilacion
+
+Invocando 100000 las creaciones de los arrays:
+void Pila();
+void Heap();
+static int array[100000] = {0};
+int main()
+{	
+	for(int i=0;i<100000;i++)
+	{
+		Pila();
+		Heap();
+	}
+	return 0;
+}
+
+void Pila()
+
+{
+
+	int array[100000] = {0};
+
+}
+void Heap()
+
+{
+
+	int * array=new int[100000];
+}
+
+ERROR EN TIEMPO DE EJECUCION: memory: 1043456 signal:6
+Ejecuta sin error hasta antes de las 10000 repeticiones
+
+
+
+
+
+
